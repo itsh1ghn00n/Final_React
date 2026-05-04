@@ -2,6 +2,9 @@ function CartPage({ cartItems, updateCartQuantity, removeFromCart, onCheckout, o
   const total = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
   const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  const isOutOfStock = (item) => item.quantity > item.stock;
+  const hasInvalidItems = cartItems.some(item => item.quantity > item.stock);
+
   return (
     <section className="cart-section">
       <div className="section-heading">
@@ -15,13 +18,22 @@ function CartPage({ cartItems, updateCartQuantity, removeFromCart, onCheckout, o
         <>
           <div className="cart-list">
             {cartItems.map(item => (
-              <div className="cart-item-card">
+              <div
+                key={item.id}
+                className={`cart-item-card ${isOutOfStock(item) ? "out-of-stock" : ""}`}
+              >
                 <div className="cart-item-left">
                   <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
 
                   <div>
                     <h3>{item.name}</h3>
                     <p>${(Number(item.price) || 0).toFixed(2)}</p>
+
+                    {isOutOfStock(item) && (
+                      <p className="stock-warning">
+                        Only {item.stock} left in stock
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -29,8 +41,12 @@ function CartPage({ cartItems, updateCartQuantity, removeFromCart, onCheckout, o
                   <input
                     type="number"
                     min="1"
+                    max={item.stock}
                     value={item.quantity}
-                    onChange={(e) => updateCartQuantity(item.id, Number(e.target.value))}
+                    disabled={item.stock === 0}
+                    onChange={(e) =>
+                      updateCartQuantity(item.id, Number(e.target.value))
+                    }
                   />
 
                   <button
@@ -54,7 +70,7 @@ function CartPage({ cartItems, updateCartQuantity, removeFromCart, onCheckout, o
             <button
               className="primary-button"
               onClick={onCheckout}
-              disabled={cartItems.length === 0}
+              disabled={cartItems.length === 0 || hasInvalidItems}
             >
               Proceed to Checkout
             </button>

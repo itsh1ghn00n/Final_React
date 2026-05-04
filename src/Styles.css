@@ -723,3 +723,19 @@ textarea {
   border-radius: 999px;
   padding: 4px 7px;
 }
+
+.out-of-stock {
+  opacity: 0.5;
+  border: 1px solid #ef4444;
+}
+
+.stock-warning {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -95,6 +95,7 @@ function App() {
             name: item.product?.name || item.name,
             price: Number(item.product?.price || item.price || 0),
             quantity: Number(item.quantity || 1),
+            stock: item.product?.stock_quantity || 0,
             imageUrl: item.product?.imageUrl || item.imageUrl || "https://via.placeholder.com/100",
         }));
     }
